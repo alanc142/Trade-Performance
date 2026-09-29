@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create your Journal GitHub App</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 660px; margin: 3rem auto; padding: 0 1.25rem; line-height: 1.5; }
+  pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+  button { font-size: 1rem; padding: .75rem 1.5rem; border-radius: 8px; border: 0; background: #1f883d; color: #fff; cursor: pointer; }
+  button:hover { background: #1a7f37; }
+  code { background: #f4f4f4; padding: .15rem .4rem; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>Journal &mdash; GitHub App</h1>
+<p>
+  This page registers the GitHub App on your account using a manifest.
+  Before clicking, edit <code>manifest.json</code> (it must sit next to this file):
+</p>
+<ol>
+  <li><strong>name</strong> &mdash; must be unique across all of GitHub.</li>
+  <li><strong>url</strong> &mdash; the app's homepage.</li>
+  <li><strong>redirect_url</strong> &mdash; where GitHub sends you after creation with a temporary <code>code</code> you exchange for the app's credentials.</li>
+</ol>
+<form id="manifestForm" action="https://github.com/settings/apps/new" method="post">
+  <input type="hidden" name="manifest" id="manifestInput">
+  <input type="hidden" name="state" id="stateInput">
+  <button type="submit">Create GitHub App</button>
+</form>
+<h2>Manifest preview</h2>
+<pre id="preview">loading manifest.json&hellip;</pre>
+<script>
+fetch('manifest.json')
+  .then(r => { if (!r.ok) throw new Error('not found'); return r.json(); })
+  .then(m => {
+    document.getElementById('manifestInput').value = JSON.stringify(m);
+    document.getElementById('stateInput').value = Math.random().toString(36).slice(2);
+    document.getElementById('preview').textContent = JSON.stringify(m, null, 2);
+  })
+  .catch(() => {
+    document.getElementById('preview').textContent =
+      'Could not load manifest.json. Make sure it sits next to this file and you open this page over http(s), not file://';
+  });
+</script>
+</body>
+</html>
